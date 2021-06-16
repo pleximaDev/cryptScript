@@ -47,7 +47,7 @@ class Description:
         ____________________________________________________________
         ____________________________________________________________
         ____________________                    ____________________
-        ____________________    Plexima labs    ____________________
+        ____________________    PhysTeX labs    ____________________
         ____________________        BSD         ____________________ 
         ____________________________________________________________
         ____________________________________________________________
@@ -92,6 +92,23 @@ class Encryption:
     def __init__(self):
         self.key = None
         self.text = None
+    
+    def __str__(self):
+        return "key == " + self.key.decode('utf-8')
+    
+    def printAllEncryptions(encryptions):
+        for encryption in encryptions:
+            print encryption
+    
+    def __eq__(self, other):
+        if self.key == other.key:
+            return True
+        else:
+            return False
+
+    __hash__ = None
+
+    __repr__ = __str__
 
     def generateKey(self):
         self.key = fn.generate_key()
