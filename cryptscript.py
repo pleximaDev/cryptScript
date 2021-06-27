@@ -8,7 +8,7 @@ class Description:
         self, nameOfProgram: str,
         version: str,
         options: List[str],
-        comingSoon : List[str]
+        comingSoon: List[str]
         ) -> None:
 
         self.name = nameOfProgram
@@ -47,7 +47,7 @@ class Description:
         ____________________________________________________________
         ____________________________________________________________
         ____________________                    ____________________
-        ____________________    PhysTeX labs    ____________________
+        ____________________    Plexima labs    ____________________
         ____________________        BSD         ____________________ 
         ____________________________________________________________
         ____________________________________________________________
@@ -81,7 +81,7 @@ class Description:
             msg += '\t\t\t\t- ' + self.expected[i] + '\n'
 
         msg += """
-        ____________________    PhysTeX labs    ____________________
+        ____________________    Plexima labs    ____________________
         ____________________________________________________________
                 """
         print(msg)
@@ -98,7 +98,7 @@ class Encryption:
     
     def printAllEncryptions(encryptions):
         for encryption in encryptions:
-            print encryption
+            print(encryption)
     
     def __eq__(self, other):
         if self.key == other.key:
@@ -151,7 +151,7 @@ class Encryption:
         except TypeError:
             print("You haven't saved any key yet...")
             return ""
-        except AttributeError:
+        except AttributeError: # possibly deprecated
             print("You haven't provided any text to encrypt...")
             return ""
         except:
@@ -166,7 +166,7 @@ class Encryption:
         except TypeError:
             print("You haven't saved any key yet...")
             return ""
-        except AttributeError:
+        except AttributeError: # possibly deprecated
             print("You haven't provided any text to encrypt...")
         except:
             print("Some error has occured while doing this operation...")
@@ -182,8 +182,8 @@ class Encryption:
 
 class Control:
     def __init__(self):
-        self.wrongCounter = 0
-        self.typedHandler = ''
+        self._wrongCounter = 0
+        self._typedHandler = ''
 
     def outputResult(self, text, typeOfResult):
         print(typeOfResult,'\n' + 84 * '_' + '\n', text, '\n' + 84 * '_' + '\n')
@@ -192,49 +192,55 @@ class Control:
         de.printLogo()
         de.printHelp()
         while True:
-            self.typedHandler = input("Enter your next command here:\n")
-            if self.typedHandler in ('G', 'g'): # generatekey
+            self._typedHandler = input("Enter your next command here:\n")
+            if self._typedHandler in ('G', 'g'): # generatekey
                 en.generateKey()
 
-            elif self.typedHandler in ('ES', 'es', 'Es', 'sE'): # entersavekey
+            elif self._typedHandler in ('ES', 'es', 'Es', 'sE'): # entersavekey
                 en.inputAndSaveKey()
 
-            elif self.typedHandler in ('S', 's'): # savekeyfile
+            elif self._typedHandler in ('S', 's'): # savekeyfile
                 en.saveKeyToFile()
 
-            elif self.typedHandler in ('E', 'e'): # encrypt
+            elif self._typedHandler in ('E', 'e'): # encrypt
                 try:
                     text = input("Enter text to encrypt:\n").encode()
                 except:
                     print("Some error has occured while doing this operation...")
                 else:
+                    if text == b'':
+                        print("You haven't provided any text to encrypt...")
+                        continue
                     self.outputResult(en.toEncrypt(text), 'Encrypted text:')
 
-            elif self.typedHandler in ('D', 'd'): #decrypt
+            elif self._typedHandler in ('D', 'd'): #decrypt
                 try:
                     text = input("Enter text to decrypt:\n").encode()
                 except:
                     print("Some error has occured while doing this operation...")
                 else:
+                    if text == b'':
+                        print("You haven't provided any text to encrypt...")
+                        continue
                     self.outputResult(en.toDecrypt(text), 'Decrypted text:')
 
-            elif self.typedHandler in ('F', 'f', 'q', ':q', 'Q', 'e', 'exit'):
+            elif self._typedHandler in ('F', 'f', 'q', ':q', 'Q', 'e', 'exit'):
                 de.printConclusion()
                 return
 
-            elif self.typedHandler in ('LK', 'lk','Lk', 'lK'):
+            elif self._typedHandler in ('LK', 'lk','Lk', 'lK'):
                 en.loadKeyFromFile()
                 
-            elif self.typedHandler in ('H', 'h'):
+            elif self._typedHandler in ('H', 'h'):
                 de.printHelp()
                 
-            elif self.typedHandler in ('K', 'k'):
+            elif self._typedHandler in ('K', 'k'):
                 en.showKey()
             else:
                 print("You've entered wrong command! Repeat please...")
-                self.wrongCounter += 1
-                if self.wrongCounter > 5:
-                    self.wrongCounter = 0
+                self._wrongCounter += 1
+                if self._wrongCounter > 5:
+                    self._wrongCounter = 0
                     print("You've entered wrong command multiple times! \
                     If you need help type 'h'")
 
@@ -262,7 +268,8 @@ def main():
         "Saving key, encrypted and decrypted texts to files  (Done! +/-)",
         "Reading key, texts to encrypt or decrypt from files (Done! +/-)",
         "Cyrillic support                                    (  Done!  )",
-        "Copy to buffer"
+        "Copy to buffer",
+        "Adding runtime modes (time of execution, etc.)"
     ]
     
     de = Description(nameOfProgram, version, options, comingSoon)
